@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
 import './App.css'
 import ViewList from './components/ViewList'
 import UserForm from './components/UserForm'
@@ -10,7 +9,7 @@ class App extends Component {
 
   state = {
     data: [],
-    route: 'form' // or form
+    route: 'list' // or form
   }
 
   constructor() {
@@ -39,13 +38,25 @@ class App extends Component {
     })
   }
 
+
+  addUser = users => {
+    axios.post('https://jsonplaceholder.typicode.com/users', users)
+    .then(({ data }) => {
+      const newData = this.state.data.concat(data)
+      this.setState({
+        data: newData,
+        route: 'list'
+      })
+    })
+  }
+
   render() {
     const { route, data } = this.state
 
     return (
       <div className="App">
         {route === 'list' && <ViewList newUser={this.newUser} handleClick={this.selectUser} data={data} />}
-        {route === 'form' && <UserForm />}
+        {route === 'form' && <UserForm handleSubmit={this.addUser} />}
       </div>
     );
   }

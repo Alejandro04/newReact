@@ -3,15 +3,15 @@ import React, { Component } from 'react'
 
 const validate = values => {
     const errors = {}
-    
-    if(!values.name){
-        errors.name = 'Fields is required!'
+
+    if (!values.name) {
+        errors.name = 'this field is required!'
     }
-    if(!values.email){
-        errors.email = 'Fields is required!'
+    if (!values.email) {
+        errors.email = 'this field is required!'
     }
-    if(!values.website){
-        errors.website = 'Fields is required!'
+    if (!values.website) {
+        errors.website = 'this field is required!'
     }
 
     return errors
@@ -24,7 +24,7 @@ export default class UserForm extends Component {
     }
 
     // Object Destructuring
-    handleChange = ({ target }) =>{
+    handleChange = ({ target }) => {
         //console.log(target.name, target.value)
 
         this.setState({
@@ -36,13 +36,15 @@ export default class UserForm extends Component {
         e.preventDefault()
 
         // Destructuring and Object Spread Operator
-        const { errors, ...withoutErrors } = this.state 
+        const { errors, ...withoutErrors } = this.state
         const result = validate(withoutErrors)
-        this.setState({errors: result})
+        this.setState({ errors: result })
         // Evaluar SI el form viene con errores
-        if(!Object.keys(result).length){
+        if (!Object.keys(result).length) {
+            const { handleSubmit } = this.props
 
             // Envío de form
+            handleSubmit(withoutErrors)
             e.target.reset()
         }
     }
