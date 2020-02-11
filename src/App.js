@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   selectUser = id => {
-    console.log(id)
+    //console.log(id)
     this.setState({
       route: 'form',
       userSelected: id
@@ -50,13 +50,26 @@ class App extends Component {
     })
   }
 
+  updateUser = (id, values) => {
+    axios.put(`https://jsonplaceholder.typicode.com/users/${id}`, values)
+      .then(() => {
+        const newData = this.state.data.map(x => x.id === id ? values : x)
+        this.setState({
+          data: newData,
+          route: 'list'
+        })
+      })
+  }
+
   render() {
-    const { route, data } = this.state
+    const { route, data, userSelected } = this.state
+    const initValues = userSelected && data.find(x => x.id === userSelected)
+    console.log(initValues)
 
     return (
       <div className="App">
         {route === 'list' && <ViewList newUser={this.newUser} handleClick={this.selectUser} data={data} />}
-        {route === 'form' && <UserForm handleSubmit={this.addUser} />}
+        {route === 'form' && <UserForm handleUpdate={this.updateUser} initValues={initValues || {}} handleSubmit={this.addUser} />}
       </div>
     );
   }
